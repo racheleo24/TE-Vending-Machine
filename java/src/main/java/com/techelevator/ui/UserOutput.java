@@ -38,4 +38,8 @@ public class UserOutput
         }
     }
 
+    public static void fileError(){
+        System.out.println("Error! File could not be read");
+    }
+
 }

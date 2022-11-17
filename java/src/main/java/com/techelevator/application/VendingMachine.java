@@ -15,7 +15,6 @@ public class VendingMachine
 {
 
     private  final String FILE ="catering.csv"; //enter desired catering file
-
     private  BigDecimal currentMoney = new BigDecimal("0.00");
 
 
@@ -29,22 +28,20 @@ public class VendingMachine
 
             if(choice.equals("display"))
             {
-              UserOutput.displayItems(itemList);
+                UserOutput.displayItems(itemList);
                 // display the vending machine slots
             }
             else if(choice.equals("purchase"))
             {
                 // make a purchase
-
-                purchaseScreen(itemList);
+                UserInput.purchaseScreen(currentMoney, itemList);
             }
             else if(choice.equals("exit"))
             {
-                // good bye
+                // goodbye
                 break;
             }
         }
-
 
     }
 
@@ -69,56 +66,11 @@ public class VendingMachine
                     items.add(new Candy(splitLine[1],new BigDecimal(splitLine[2]),splitLine[0]));
                 }
             }
-
-        }catch(FileNotFoundException e){
-            System.out.println("Error! File could not be read");
+        } catch(FileNotFoundException e){
+            UserOutput.fileError();
             System.exit(1);
         }
         return items;
-    }
-
-    public void purchaseScreen(List<SellableItem> itemList) {
-        while (true) {
-            String choice = UserInput.getPurchaseScreenOption(currentMoney);
-            Scanner input = new Scanner(System.in);
-
-            if (choice.equals("feed money")) {
-                System.out.print("How much money would you like to enter? ");
-                String inputMoney = input.nextLine();
-                currentMoney = currentMoney.add(UserInput.feedMoneyInput(inputMoney));
-
-            } else if (choice.equals("select item")) {
-
-                UserOutput.displayItems(itemList);
-
-                System.out.print("Enter the ID of the item you would like to purchase: ");
-                String id = input.nextLine();
-                for (SellableItem item : itemList) {
-                    if (item.getSlotIdentifier().equals(id)) {
-                        if (currentMoney.compareTo(item.getPrice()) >= 0) {
-                            currentMoney = currentMoney.subtract(UserInput.charged(id,itemList));
-                            UserInput.updateQuantity(id,itemList);
-                        } else {
-                            System.out.println("Insufficient Funds");
-                        }
-                        if(item.getQuantity()==0){
-                            System.out.println("We are out of stock of "+item.getName());
-                        }
-                    }
-                }
-
-
-
-
-
-
-
-            } else if (choice.equals("finish")) {
-                currentMoney=new BigDecimal("0.00");
-
-                break;
-            }
-        }
     }
 
 }

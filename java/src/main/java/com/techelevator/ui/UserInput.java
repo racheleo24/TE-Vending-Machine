@@ -4,6 +4,7 @@ import com.techelevator.application.VendingMachine;
 import com.techelevator.models.SellableItem;
 
 import java.math.BigDecimal;
+import java.sql.SQLOutput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -85,6 +86,42 @@ public class UserInput
             return "";
         }
 
+    }
+
+    public static void purchaseScreen(BigDecimal currentMoney, List<SellableItem> itemList) {
+        while (true) {
+            String choice = getPurchaseScreenOption(currentMoney);
+
+            if (choice.equals("feed money")) {
+                System.out.print("How much money would you like to enter? ");
+                String inputMoney = scanner.nextLine();
+                currentMoney = currentMoney.add(feedMoneyInput(inputMoney));
+
+            } else if (choice.equals("select item")) {
+
+                UserOutput.displayItems(itemList);
+
+                System.out.print("Enter the ID of the item you would like to purchase: ");
+                String id = scanner.nextLine();
+                for (SellableItem item : itemList) {
+                    if (item.getSlotIdentifier().equals(id)) {
+                        if (currentMoney.compareTo(item.getPrice()) >= 0) {
+                            currentMoney = currentMoney.subtract(charged(id,itemList));
+                            updateQuantity(id,itemList);
+                            System.out.println(item.getMessage());
+                        } else {
+                            System.out.println("Insufficient Funds");
+                        }
+                        if(item.getQuantity()==0){
+                            System.out.println("We are out of stock of "+ item.getName());
+                        }
+                    }
+                }
+            } else if (choice.equals("finish")) {
+                currentMoney = new BigDecimal("0.00");
+                break;
+            }
+        }
     }
 
     public static BigDecimal feedMoneyInput(String feedMoney) {
