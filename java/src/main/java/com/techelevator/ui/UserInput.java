@@ -1,8 +1,10 @@
 package com.techelevator.ui;
 
 import com.techelevator.application.VendingMachine;
+import com.techelevator.models.SellableItem;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -48,7 +50,7 @@ public class UserInput
 
     }
 
-    public static String getPurchaseScreenOption()
+    public static String getPurchaseScreenOption(BigDecimal currentMoney)
     {
         System.out.println("\nWhat would you like to do?");
         System.out.println();
@@ -58,7 +60,7 @@ public class UserInput
         System.out.println("F) Finish Transaction");
 
         System.out.println();
-        System.out.print("Current Money Provided: " + VendingMachine.getCurrentMoney());
+        System.out.print("Current Money Provided: " + currentMoney);
 
         System.out.println();
         System.out.print("Please select an option: ");
@@ -85,9 +87,7 @@ public class UserInput
 
     }
 
-    public static BigDecimal feedMoneyInput() {
-        System.out.print("\nHow much money would you like to enter? ");
-        String feedMoney = scanner.next();
+    public static BigDecimal feedMoneyInput(String feedMoney) {
 
         if (feedMoney.equals("1") || feedMoney.equals("5") || feedMoney.equals("10") || feedMoney.equals("20")) {
             BigDecimal newMoney = new BigDecimal(feedMoney);
@@ -98,4 +98,22 @@ public class UserInput
             return new BigDecimal("0");
         }
     }
+
+    public static BigDecimal charged(String id, List<SellableItem> itemList){
+        BigDecimal spent=new BigDecimal("0");
+        for (SellableItem item:itemList){
+            if(item.getSlotIdentifier().equals(id)){
+               spent=item.getPrice();
+            }
+        }
+        return spent;
+    }
+    public static void updateQuantity(String id, List<SellableItem> itemList){
+        for(SellableItem item:itemList){
+            if(item.getSlotIdentifier().equals(id)){
+                item.setQuantity(item.getQuantity()-1);
+            }
+        }
+    }
+
 }

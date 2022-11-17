@@ -14,16 +14,14 @@ import java.util.Scanner;
 public class VendingMachine 
 {
 
-    private final String FILE1="catering.csv";
-    private final String FILE2="catering1.csv";
-    private static BigDecimal currentMoney = new BigDecimal("0.00");
+    private  final String FILE ="catering.csv"; //enter desired catering file
 
-    public static BigDecimal getCurrentMoney() {
-        return currentMoney;
-    }
+    private  BigDecimal currentMoney = new BigDecimal("0.00");
+
 
     public void run()
     {
+        List<SellableItem> itemList=readFile(FILE);
         while(true)
         {
             UserOutput.displayHomeScreen();
@@ -31,16 +29,14 @@ public class VendingMachine
 
             if(choice.equals("display"))
             {
-               System.out.printf("%-4s %-20s %-10s %-4s\n","ID","Name","Price","Quantity");
-               for(SellableItem item:readFile(FILE1)){
-                   System.out.printf("%-4s %-20s $%-10.2f %-4s\n", item.getSlotIdentifier(),item.getName(),item.getPrice(),item.getQuantity());
-               }
+              UserOutput.displayItems(itemList);
                 // display the vending machine slots
             }
             else if(choice.equals("purchase"))
             {
                 // make a purchase
-                purchaseScreen();
+
+                purchaseScreen(itemList);
             }
             else if(choice.equals("exit"))
             {
@@ -52,7 +48,7 @@ public class VendingMachine
 
     }
 
-    public List<SellableItem> readFile(String input){
+    public static List<SellableItem> readFile(String input){
         File file=new File(input);
         List<SellableItem> items=new ArrayList<>();
 
@@ -81,25 +77,45 @@ public class VendingMachine
         return items;
     }
 
-    public void purchaseScreen() {
+    public void purchaseScreen(List<SellableItem> itemList) {
         while (true) {
-            String choice = UserInput.getPurchaseScreenOption();
+            String choice = UserInput.getPurchaseScreenOption(currentMoney);
             Scanner input = new Scanner(System.in);
 
             if (choice.equals("feed money")) {
-                BigDecimal newMoney = UserInput.feedMoneyInput();
-                currentMoney.add(newMoney);
+                System.out.print("How much money would you like to enter? ");
+                String inputMoney = input.nextLine();
+                currentMoney = currentMoney.add(UserInput.feedMoneyInput(inputMoney));
 
             } else if (choice.equals("select item")) {
 
-                System.out.printf("%-4s %-20s %-10s %-4s\n", "ID", "Name", "Price", "Quantity");
-                for (SellableItem item : readFile(FILE1)) {
-                    System.out.printf("%-4s %-20s $%-10.2f %-4s\n", item.getSlotIdentifier(), item.getName(), item.getPrice(), item.getQuantity());
+                UserOutput.displayItems(itemList);
+
+                System.out.print("Enter the ID of the item you would like to purchase: ");
+                String id = input.nextLine();
+                for (SellableItem item : itemList) {
+                    if (item.getSlotIdentifier().equals(id)) {
+                        if (currentMoney.compareTo(item.getPrice()) >= 0) {
+                            currentMoney = currentMoney.subtract(UserInput.charged(id,itemList));
+                            UserInput.updateQuantity(id,itemList);
+                        } else {
+                            System.out.println("Insufficient Funds");
+                        }
+                        if(item.getQuantity()==0){
+                            System.out.println("We are out of stock of "+item.getName());
+                        }
+                    }
                 }
-                // make a purchase
+
+
+
+
+
+
 
             } else if (choice.equals("finish")) {
-                // good bye
+                currentMoney=new BigDecimal("0.00");
+
                 break;
             }
         }
