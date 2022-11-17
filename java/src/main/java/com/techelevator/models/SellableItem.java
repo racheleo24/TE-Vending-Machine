@@ -5,10 +5,11 @@ import java.math.BigDecimal;
 public abstract class SellableItem {
 
     // Properties
-    private String name;
+    private  String name;
     private BigDecimal price;
     private String message;
-    private String slotIdentifier;
+    private  String slotIdentifier;
+    private  int quantity;
 
     // Constructor
     public SellableItem(String name, BigDecimal price, String message, String slotIdentifier) {
@@ -16,35 +17,45 @@ public abstract class SellableItem {
         this.price = price;
         this.message = message;
         this.slotIdentifier = slotIdentifier;
+        this.quantity=6;
     }
 
     // Getters and Setters
-    public String getName() {
+    public  String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
-    public BigDecimal getPrice() {
+    public  BigDecimal getPrice() {
         return price;
     }
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
-    public String getMessage() {
+    public  String getMessage() {
         return message;
     }
     public void setMessage(String message) {
         this.message = message;
     }
-    public String getSlotIdentifier() {
+    public  String getSlotIdentifier() {
         return slotIdentifier;
     }
     public void setSlotIdentifier(String slotIdentifier) {
         this.slotIdentifier = slotIdentifier;
     }
 
+    public  int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     // Methods
+
     @Override
     public String toString() {
         return "SellableItem{" +
@@ -52,6 +63,7 @@ public abstract class SellableItem {
                 ", price=" + price +
                 ", message='" + message + '\'' +
                 ", slotIdentifier='" + slotIdentifier + '\'' +
+                ", quantity=" + quantity +
                 '}';
     }
 }

@@ -1,10 +1,21 @@
 package com.techelevator.application;
 
+import com.techelevator.models.*;
 import com.techelevator.ui.UserInput;
 import com.techelevator.ui.UserOutput;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 public class VendingMachine 
 {
+
+    private final String FILE1="catering.csv";
+    private final String FILE2="catering1.csv";
     public void run()
     {
         while(true)
@@ -14,6 +25,11 @@ public class VendingMachine
 
             if(choice.equals("display"))
             {
+                System.out.printf("%-4s %-20s %-10s %-4s\n","ID","Name","Price","Quantity");
+               for(SellableItem item:readFile(FILE1)){
+                   System.out.printf("%-4s %-20s $%-10.2f %-4s\n", item.getSlotIdentifier(),item.getName(),item.getPrice(),item.getQuantity());
+
+               }
                 // display the vending machine slots
             }
             else if(choice.equals("purchase"))
@@ -26,6 +42,35 @@ public class VendingMachine
                 break;
             }
         }
+    }
+
+    public List<SellableItem> readFile(String input){
+        File file=new File(input);
+        List<SellableItem> items=new ArrayList<>();
+
+        try(Scanner scanner=new Scanner(file)){
+            while (scanner.hasNextLine()){
+                String line=scanner.nextLine();
+                String [] splitLine=line.split(",");
+                if(splitLine[3].equalsIgnoreCase("Munchy")){
+                    items.add(new Munchy(splitLine[1],new BigDecimal(splitLine[2]),splitLine[0]));
+
+                } if(splitLine[3].equalsIgnoreCase("Gum")){
+                    items.add(new Gum(splitLine[1],new BigDecimal(splitLine[2]),splitLine[0]));
+
+                } if(splitLine[3].equalsIgnoreCase("Drink")){
+                    items.add(new Drinks(splitLine[1],new BigDecimal(splitLine[2]),splitLine[0]));
+
+                } if(splitLine[3].equalsIgnoreCase("Candy")){
+                    items.add(new Candy(splitLine[1],new BigDecimal(splitLine[2]),splitLine[0]));
+                }
+            }
+
+        }catch(FileNotFoundException e){
+            System.out.println("Error! File could not be read");
+            System.exit(1);
+        }
+        return items;
     }
     
 }
