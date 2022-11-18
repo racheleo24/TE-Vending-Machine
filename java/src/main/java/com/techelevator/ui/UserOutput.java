@@ -48,13 +48,32 @@ public class UserOutput
         int numberDimes = 0;
         int numberNickels = 0;
 
-        numberDollars = currentMoney.intValue();
 
-        System.out.println("Your change is: $" + currentMoney);
+        numberDollars = currentMoney.intValue();  //5.65 turns into 5
+        BigDecimal intValue=new BigDecimal(numberDollars); //turning 5 back into big decimal
+        BigDecimal fractional=currentMoney.subtract(intValue);//5.65-5>>0.65
+        BigDecimal fractionalMultipled =fractional.multiply(new BigDecimal("100")); //0.65*100=65
+        BigDecimal divisibleByFive=fractionalMultipled.divide(new BigDecimal("5"));  //65/5=13
+        int divisibleByFiveInt=divisibleByFive.intValue();//turning 13 into an int
+
+        for (int i=0;i<=divisibleByFiveInt;i++) {
+            if (divisibleByFiveInt >= 5) {
+                numberQuarters++;
+                divisibleByFiveInt -= 5;
+            }
+            if (divisibleByFiveInt < 5 && divisibleByFiveInt >= 2) {
+                numberDimes++;
+                divisibleByFiveInt -= 2;
+            } else {
+                numberNickels++;
+                divisibleByFiveInt--;
+            }
+        }
+        System.out.println("\nYour change is: $" + currentMoney);
         System.out.println("Now dispensing: " + numberDollars + " dollars, " +
                 numberQuarters + " quarters, " +
                 numberDimes + " dimes, and " +
-                numberNickels + " nickels."
+                numberNickels + " nickel."
         );
     }
 

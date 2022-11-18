@@ -95,18 +95,20 @@ public class UserInput
             String choice = getPurchaseScreenOption(currentMoney);
 
             if (choice.equals("feed money")) {
-                System.out.print("How much money would you like to enter? ");
+                System.out.print("\nHow much money would you like to enter? ");
                 String inputMoney = scanner.nextLine();
                 currentMoney = currentMoney.add(feedMoneyInput(inputMoney));
 
             } else if (choice.equals("select item")) {
                 UserOutput.displayItems(itemList);
 
-                System.out.print("Enter the ID of the item you would like to purchase: ");
+                System.out.print("\nEnter the ID of the item you would like to purchase: ");
                 String id = scanner.nextLine();
 
-                for (SellableItem item : itemList) {
-                    if (item.getSlotIdentifier().equals(id) && item.getQuantity() > 0) {
+                int tally=0;
+                for (SellableItem item:itemList){
+
+                    if (item.getSlotIdentifier().equals(id) && item.getQuantity()>0){
                         if (count % 2 == 0) {
                             BigDecimal dollarOffPrice = (item.getPrice().subtract(new BigDecimal("1")));
                             if (currentMoney.compareTo(dollarOffPrice) >= 0) {
@@ -114,7 +116,7 @@ public class UserInput
                                 count++;
                             }
                             else {
-                                System.out.println("Insufficient funds");
+                                System.out.println("\nInsufficient funds");
                             }
                         } else {
                             if (currentMoney.compareTo(item.getPrice()) >= 0) {
@@ -122,14 +124,23 @@ public class UserInput
                                 count++;
                             }
                             else {
-                                System.out.println("Insufficient funds");
+                                System.out.println("\nInsufficient funds");
                             }
                         }
+                        tally++;
                     }
-                    else if (item.getSlotIdentifier().equals(id) && item.getQuantity() <= 0) {
-                        System.out.println("Product no longer available");
+                    else if (item.getQuantity() <= 0) {
+                        System.out.println("\nProduct no longer available");
+                        tally++;
+
                     }
+
+                    }
+                if(tally==0){
+                    System.out.println("Product Not Found");
+
                 }
+
             }
 
             else if (choice.equals("finish")) {
@@ -147,7 +158,7 @@ public class UserInput
             return newMoney;
         }
         else {
-            System.out.println("Invalid entry! Taste Elevator only accepts $1, $5, $10, or $20.");
+            System.out.println("\nInvalid entry! Taste Elevator only accepts $1, $5, $10, or $20.");
             return new BigDecimal("0");
         }
     }
@@ -157,9 +168,8 @@ public class UserInput
         spent=item.getPrice();
         currentMoney = currentMoney.subtract(spent);
         item.setQuantity(item.getQuantity()-1);
+        System.out.println("\nNow dispensing " + item.getName() + ", " +"$"+ spent);
         System.out.println(item.getMessage());
-        System.out.println("Now dispensing " + item.getName() + ", " + spent);
-
         return currentMoney;
     }
 
@@ -170,9 +180,8 @@ public class UserInput
         spent=item.getPrice().subtract(new BigDecimal("1"));
         currentMoney = currentMoney.subtract(spent);
         item.setQuantity(item.getQuantity()-1);
+        System.out.println("\nNow dispensing " + item.getName() + ", " +"BOGODO-One Dollar Off! $"+ spent);
         System.out.println(item.getMessage());
-        System.out.println("Now dispensing " + item.getName() + ", " + spent);
-
         return currentMoney;
     }
 
