@@ -103,19 +103,28 @@ public class UserInput
 
                 System.out.print("Enter the ID of the item you would like to purchase: ");
                 String id = scanner.nextLine();
+                int count=1;
                 for (SellableItem item : itemList) {
                     if (item.getSlotIdentifier().equals(id)) {
                         if (currentMoney.compareTo(item.getPrice()) >= 0) {
-                            currentMoney = currentMoney.subtract(charged(id,itemList));
-                            updateQuantity(id,itemList);
-                            System.out.println(item.getMessage());
-                        } else {
-                            System.out.println("Insufficient Funds");
-                        }
-                        if(item.getQuantity()==0){
-                            System.out.println("We are out of stock of "+ item.getName());
-                        }
+                            if (count % 2 == 0) {
+                                currentMoney=purchaseItemDollarOff(currentMoney,item);
+                            } else {
+                                currentMoney = purchaseItemFullPrice(currentMoney,item);
+                                
+                            }
+
+                            count++;
+
+                        } else{
+                                System.out.println("Insufficient Funds");
+                            }
+                            if (item.getQuantity() == 0) {
+                                System.out.println("We are out of stock of " + item.getName());
+                            }
+
                     }
+
                 }
             } else if (choice.equals("finish")) {
                 currentMoney = new BigDecimal("0.00");
@@ -135,22 +144,33 @@ public class UserInput
             return new BigDecimal("0");
         }
     }
+    public static BigDecimal purchaseItemFullPrice(BigDecimal currentMoney, SellableItem item){
 
-    public static BigDecimal charged(String id, List<SellableItem> itemList){
-        BigDecimal spent=new BigDecimal("0");
-        for (SellableItem item:itemList){
-            if(item.getSlotIdentifier().equals(id)){
-               spent=item.getPrice();
-            }
-        }
-        return spent;
+        BigDecimal spent;
+        spent=item.getPrice();
+        currentMoney = currentMoney.subtract(spent);
+        item.setQuantity(item.getQuantity()-1);
+        System.out.println(item.getMessage());
+        System.out.println("Now dispensing " + item.getName() + ", " + spent);
+
+        return currentMoney;
     }
-    public static void updateQuantity(String id, List<SellableItem> itemList){
-        for(SellableItem item:itemList){
-            if(item.getSlotIdentifier().equals(id)){
-                item.setQuantity(item.getQuantity()-1);
-            }
-        }
+
+
+    public static BigDecimal purchaseItemDollarOff(BigDecimal currentMoney, SellableItem item){
+
+        BigDecimal spent;
+        spent=item.getPrice().subtract(new BigDecimal("1"));
+        currentMoney = currentMoney.subtract(spent);
+        item.setQuantity(item.getQuantity()-1);
+        System.out.println(item.getMessage());
+        System.out.println("Now dispensing " + item.getName() + ", " + spent);
+
+        return currentMoney;
     }
+
+
+
+
 
 }
