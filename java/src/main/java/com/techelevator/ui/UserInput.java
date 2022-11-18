@@ -89,6 +89,8 @@ public class UserInput
     }
 
     public static void purchaseScreen(BigDecimal currentMoney, List<SellableItem> itemList) {
+        int count = 1;
+
         while (true) {
             String choice = getPurchaseScreenOption(currentMoney);
 
@@ -98,35 +100,40 @@ public class UserInput
                 currentMoney = currentMoney.add(feedMoneyInput(inputMoney));
 
             } else if (choice.equals("select item")) {
-
                 UserOutput.displayItems(itemList);
 
                 System.out.print("Enter the ID of the item you would like to purchase: ");
                 String id = scanner.nextLine();
-                int count=1;
+
                 for (SellableItem item : itemList) {
-                    if (item.getSlotIdentifier().equals(id)) {
-                        if (currentMoney.compareTo(item.getPrice()) >= 0) {
-                            if (count % 2 == 0) {
-                                currentMoney=purchaseItemDollarOff(currentMoney,item);
-                            } else {
-                                currentMoney = purchaseItemFullPrice(currentMoney,item);
-                                
+                    if (item.getSlotIdentifier().equals(id) && item.getQuantity() > 0) {
+                        if (count % 2 == 0) {
+                            BigDecimal dollarOffPrice = (item.getPrice().subtract(new BigDecimal("1")));
+                            if (currentMoney.compareTo(dollarOffPrice) >= 0) {
+                                currentMoney = purchaseItemDollarOff(currentMoney, item);
+                                count++;
                             }
-
-                            count++;
-
-                        } else{
-                                System.out.println("Insufficient Funds");
+                            else {
+                                System.out.println("Insufficient funds");
                             }
-                            if (item.getQuantity() == 0) {
-                                System.out.println("We are out of stock of " + item.getName());
+                        } else {
+                            if (currentMoney.compareTo(item.getPrice()) >= 0) {
+                                currentMoney = purchaseItemFullPrice(currentMoney, item);
+                                count++;
                             }
-
+                            else {
+                                System.out.println("Insufficient funds");
+                            }
+                        }
                     }
-
+                    else if (item.getSlotIdentifier().equals(id) && item.getQuantity() <= 0) {
+                        System.out.println("Product no longer available");
+                    }
                 }
-            } else if (choice.equals("finish")) {
+            }
+
+            else if (choice.equals("finish")) {
+                UserOutput.getChange(currentMoney);
                 currentMoney = new BigDecimal("0.00");
                 break;
             }

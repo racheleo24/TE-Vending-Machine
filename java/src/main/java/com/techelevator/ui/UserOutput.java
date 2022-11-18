@@ -42,4 +42,20 @@ public class UserOutput
         System.out.println("Error! File could not be read");
     }
 
+    public static void getChange(BigDecimal currentMoney) {
+        int numberDollars = 0;
+        int numberQuarters = 0;
+        int numberDimes = 0;
+        int numberNickels = 0;
+
+        numberDollars = currentMoney.intValue();
+
+        System.out.println("Your change is: $" + currentMoney);
+        System.out.println("Now dispensing: " + numberDollars + " dollars, " +
+                numberQuarters + " quarters, " +
+                numberDimes + " dimes, and " +
+                numberNickels + " nickels."
+        );
+    }
+
 }
