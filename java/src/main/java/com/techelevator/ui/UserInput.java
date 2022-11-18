@@ -1,10 +1,12 @@
 package com.techelevator.ui;
 
 import com.techelevator.application.VendingMachine;
+import com.techelevator.audit.Audit;
 import com.techelevator.models.SellableItem;
 
 import java.math.BigDecimal;
 import java.sql.SQLOutput;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
@@ -15,6 +17,8 @@ import java.util.Scanner;
  */
 public class UserInput
 {
+    private static Audit auditor = new Audit("Audit.txt");
+
     private static Scanner scanner = new Scanner(System.in);
 
     public static String getHomeScreenOption()
@@ -98,6 +102,7 @@ public class UserInput
                 System.out.print("\nHow much money would you like to enter? ");
                 String inputMoney = scanner.nextLine();
                 currentMoney = currentMoney.add(feedMoneyInput(inputMoney));
+                auditor.write(LocalDateTime.now() + "-- MONEY FED: $" + inputMoney + ", CURRENT MONEY: $" + currentMoney);
 
             } else if (choice.equals("select item")) {
                 UserOutput.displayItems(itemList);
@@ -108,10 +113,13 @@ public class UserInput
                 int tally=0;
                 for (SellableItem item:itemList){
 
-                    if (item.getSlotIdentifier().equals(id) && item.getQuantity()>0){
+                    if (item.getSlotIdentifier().equalsIgnoreCase(id) && item.getQuantity()>0){
                         if (count % 2 == 0) {
                             BigDecimal dollarOffPrice = (item.getPrice().subtract(new BigDecimal("1")));
                             if (currentMoney.compareTo(dollarOffPrice) >= 0) {
+                                auditor.write(LocalDateTime.now() + "-- PURCHASED: " + item.getName() + " , " +
+                                        item.getSlotIdentifier() + " , START MONEY: $" + currentMoney +
+                                        " , FINAL MONEY: $" + (currentMoney.subtract(dollarOffPrice)));
                                 currentMoney = purchaseItemDollarOff(currentMoney, item);
                                 count++;
                             }
@@ -120,6 +128,9 @@ public class UserInput
                             }
                         } else {
                             if (currentMoney.compareTo(item.getPrice()) >= 0) {
+                                auditor.write(LocalDateTime.now() + "-- PURCHASED: " + item.getName() + " , " +
+                                        item.getSlotIdentifier() + " , START MONEY: $" + currentMoney +
+                                        " , FINAL MONEY: $" + (currentMoney.subtract(item.getPrice())));
                                 currentMoney = purchaseItemFullPrice(currentMoney, item);
                                 count++;
                             }
@@ -171,6 +182,7 @@ public class UserInput
         System.out.println("\nNow dispensing " + item.getName() + ", " +"$"+ spent);
         System.out.println(item.getMessage());
         return currentMoney;
+
     }
 
 

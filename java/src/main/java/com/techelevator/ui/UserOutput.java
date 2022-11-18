@@ -1,8 +1,10 @@
 package com.techelevator.ui;
 
+import com.techelevator.audit.Audit;
 import com.techelevator.models.SellableItem;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -15,6 +17,7 @@ import java.util.Map;
  */
 public class UserOutput
 {
+    private static Audit auditor = new Audit("Audit.txt");
 
     public static void displayMessage(String message)
     {
@@ -75,6 +78,9 @@ public class UserOutput
                 numberDimes + " dimes, and " +
                 numberNickels + " nickel."
         );
+
+        auditor.write(LocalDateTime.now() + "-- CHANGE GIVEN: $" + currentMoney + " , " +
+                 "REMAINING BALANCE: $" + (currentMoney.subtract(currentMoney)));
     }
 
 }
