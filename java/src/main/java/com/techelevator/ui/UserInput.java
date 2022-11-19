@@ -21,8 +21,7 @@ public class UserInput
 
     private static Scanner scanner = new Scanner(System.in);
 
-    public static String getHomeScreenOption()
-    {
+    public static String getHomeScreenOption() {
         System.out.println("What would you like to do?");
         System.out.println();
 
@@ -36,27 +35,20 @@ public class UserInput
         String selectedOption = scanner.nextLine();
         String option = selectedOption.trim().toUpperCase();
 
-        if (option.equals("D"))
-        {
+        if (option.equals("D")) {
             return "display";
-        }
-        else if (option.equals("P"))
-        {
+        } else if (option.equals("P")) {
             return "purchase";
-        }
-        else if (option.equals("E"))
-        {
+        } else if (option.equals("E")) {
             return "exit";
-        }
-        else
-        {
+        } else if (option.equals("S")) {
+             return "sales";
+        } else {
             return "";
         }
-
     }
 
-    public static String getPurchaseScreenOption(BigDecimal currentMoney)
-    {
+    public static String getPurchaseScreenOption(BigDecimal currentMoney) {
         System.out.println("\nWhat would you like to do?");
         System.out.println();
 
@@ -73,23 +65,18 @@ public class UserInput
         String selectedOption = scanner.nextLine();
         String option = selectedOption.trim().toUpperCase();
 
-        if (option.equals("M"))
-        {
+        if (option.equals("M")) {
             return "feed money";
         }
-        else if (option.equals("S"))
-        {
+        else if (option.equals("S")) {
             return "select item";
         }
-        else if (option.equals("F"))
-        {
+        else if (option.equals("F")) {
             return "finish";
         }
-        else
-        {
+        else {
             return "";
         }
-
     }
 
     public static void purchaseScreen(BigDecimal currentMoney, List<SellableItem> itemList) {
@@ -122,6 +109,7 @@ public class UserInput
                                         " , FINAL MONEY: $" + (currentMoney.subtract(dollarOffPrice)));
                                 currentMoney = purchaseItemDollarOff(currentMoney, item);
                                 count++;
+                                item.setGetAmountSoldBOGODO(item.getGetAmountSoldBOGODO().add(new BigDecimal("1")));
                             }
                             else {
                                 System.out.println("\nInsufficient funds");
@@ -133,6 +121,8 @@ public class UserInput
                                         " , FINAL MONEY: $" + (currentMoney.subtract(item.getPrice())));
                                 currentMoney = purchaseItemFullPrice(currentMoney, item);
                                 count++;
+                                item.setAmountSoldFull(item.getAmountSoldFull().add(new BigDecimal("1")));
+
                             }
                             else {
                                 System.out.println("\nInsufficient funds");
@@ -143,15 +133,11 @@ public class UserInput
                     else if (item.getQuantity() <= 0) {
                         System.out.println("\nProduct no longer available");
                         tally++;
-
                     }
-
-                    }
+                }
                 if(tally==0){
                     System.out.println("Product Not Found");
-
                 }
-
             }
 
             else if (choice.equals("finish")) {
@@ -173,6 +159,7 @@ public class UserInput
             return new BigDecimal("0");
         }
     }
+
     public static BigDecimal purchaseItemFullPrice(BigDecimal currentMoney, SellableItem item){
 
         BigDecimal spent;
@@ -182,9 +169,7 @@ public class UserInput
         System.out.println("\nNow dispensing " + item.getName() + ", " +"$"+ spent);
         System.out.println(item.getMessage());
         return currentMoney;
-
     }
-
 
     public static BigDecimal purchaseItemDollarOff(BigDecimal currentMoney, SellableItem item){
 
@@ -196,9 +181,4 @@ public class UserInput
         System.out.println(item.getMessage());
         return currentMoney;
     }
-
-
-
-
-
 }

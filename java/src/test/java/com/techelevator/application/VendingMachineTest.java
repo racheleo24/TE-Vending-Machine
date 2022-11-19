@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,11 +39,18 @@ public class VendingMachineTest {
 
         // Act
         List<SellableItem> actualItemList = VendingMachine.readFile(source);
-        SellableItem[] expectedArray = itemList.toArray(new SellableItem[itemList.size()]);
-        SellableItem[] actualArray = actualItemList.toArray(new SellableItem[actualItemList.size()]);
+
 
         // Assert
-        Assert.assertArrayEquals(expectedArray, actualArray);
+        for (int i=0;i<itemList.size();i++){
+            Assert.assertEquals(itemList.get(i).getName(),actualItemList.get(i).getName());
+            Assert.assertEquals(itemList.get(i).getSlotIdentifier(),actualItemList.get(i).getSlotIdentifier());
+            Assert.assertEquals(itemList.get(i).getPrice(),actualItemList.get(i).getPrice());
+            Assert.assertEquals(itemList.get(i).getMessage(),actualItemList.get(i).getMessage());
+            Assert.assertEquals(itemList.get(i).getQuantity(),actualItemList.get(i).getQuantity());
+
+
+        }
     }
 
         @Test
@@ -59,9 +67,44 @@ public class VendingMachineTest {
             SellableItem[] actualArray = actualItemList.toArray(new SellableItem[actualItemList.size()]);
 
             // Assert
-            Assert.assertEquals(itemList, actualItemList);
+            for (int i=0;i<itemList.size();i++){
+                Assert.assertEquals(itemList.get(i).getName(),actualItemList.get(i).getName());
+                Assert.assertEquals(itemList.get(i).getSlotIdentifier(),actualItemList.get(i).getSlotIdentifier());
+                Assert.assertEquals(itemList.get(i).getPrice(),actualItemList.get(i).getPrice());
+                Assert.assertEquals(itemList.get(i).getMessage(),actualItemList.get(i).getMessage());
+                Assert.assertEquals(itemList.get(i).getQuantity(),actualItemList.get(i).getQuantity());
 
-            // Assert.assertTrue(itemList.size() == actualItemList.size() && itemList.containsAll(actualItemList) && actualItemList.containsAll(itemList));
+
+            }
+
+
         }
+
+    @Test
+    public void test_readFile_send_in_Test2_txt_return_empty_list () {
+        // Arrange
+        String source = "readFileTest2";
+        List<SellableItem> itemList = new ArrayList<>();
+
+
+        // Act
+        List<SellableItem> actualItemList = VendingMachine.readFile(source);
+
+        // Assert
+        for (int i=0;i<itemList.size();i++){
+            Assert.assertEquals(itemList.get(i).getName(),actualItemList.get(i).getName());
+            Assert.assertEquals(itemList.get(i).getSlotIdentifier(),actualItemList.get(i).getSlotIdentifier());
+            Assert.assertEquals(itemList.get(i).getPrice(),actualItemList.get(i).getPrice());
+            Assert.assertEquals(itemList.get(i).getMessage(),actualItemList.get(i).getMessage());
+            Assert.assertEquals(itemList.get(i).getQuantity(),actualItemList.get(i).getQuantity());
+
+
+        }
+
+
+    }
+
+
+
 
 }

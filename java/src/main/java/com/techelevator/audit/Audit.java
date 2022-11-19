@@ -1,7 +1,10 @@
 package com.techelevator.audit;
 
+import com.techelevator.models.SellableItem;
+
 import java.io.*;
 import java.sql.SQLOutput;
+import java.util.List;
 
 public class Audit implements Closeable {
 
@@ -26,6 +29,8 @@ public class Audit implements Closeable {
             }
         }
     }
+
+
 
 
     @Override

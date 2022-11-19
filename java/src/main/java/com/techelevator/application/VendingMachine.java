@@ -1,5 +1,6 @@
 package com.techelevator.application;
 
+import com.techelevator.audit.Audit;
 import com.techelevator.models.*;
 import com.techelevator.ui.UserInput;
 import com.techelevator.ui.UserOutput;
@@ -7,42 +8,44 @@ import com.techelevator.ui.UserOutput;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-public class VendingMachine
-{
+public class VendingMachine {
 
     private  final String FILE ="catering.csv"; //enter desired catering file
     private  BigDecimal currentMoney = new BigDecimal("0.00");
 
 
-    public void run()
-    {
+    public void run() {
         List<SellableItem> itemList=readFile(FILE);
-        while(true)
-        {
+        String filename=new SimpleDateFormat("yyyy-MM-dd-HHmm'-SalesReport.txt'").format(new Date());
+        Audit audit=new Audit(filename);
+
+        while(true) {
             UserOutput.displayHomeScreen();
             String choice = UserInput.getHomeScreenOption();
 
-            if(choice.equals("display"))
-            {
+            if(choice.equals("display")) {
                 UserOutput.displayItems(itemList);
                 // display the vending machine slots
             }
-            else if(choice.equals("purchase"))
-            {
+            else if(choice.equals("purchase")) {
                 // make a purchase
                 UserInput.purchaseScreen(currentMoney, itemList);
             }
-            else if(choice.equals("exit"))
-            {
+            else if(choice.equals("exit")) {
                 // goodbye
                 break;
             }
+            else if(choice.equals("sales")){
+                UserOutput.getTotalSalesReport(audit,itemList);
+            }
         }
-
     }
 
     public static List<SellableItem> readFile(String input){

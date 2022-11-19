@@ -4,7 +4,9 @@ import com.techelevator.audit.Audit;
 import com.techelevator.models.SellableItem;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -15,25 +17,24 @@ import java.util.Map;
  * 
  * Dependencies: None
  */
-public class UserOutput
-{
+public class UserOutput {
+
     private static Audit auditor = new Audit("Audit.txt");
 
-    public static void displayMessage(String message)
-    {
+    public static void displayMessage(String message) {
         System.out.println();
         System.out.println(message);
         System.out.println();
     }
 
-    public static void displayHomeScreen()
-    {
+    public static void displayHomeScreen() {
         System.out.println();
         System.out.println("***************************************************");
         System.out.println("                      Home");
         System.out.println("***************************************************");
         System.out.println();
     }
+
     public static void displayItems(List<SellableItem> itemList){
         System.out.printf("%-4s %-20s %-10s %-4s\n","ID","Name","Price","Quantity");
         for(SellableItem item:itemList){
@@ -50,7 +51,6 @@ public class UserOutput
         int numberQuarters = 0;
         int numberDimes = 0;
         int numberNickels = 0;
-
 
         numberDollars = currentMoney.intValue();  //5.65 turns into 5
         BigDecimal intValue=new BigDecimal(numberDollars); //turning 5 back into big decimal
@@ -76,11 +76,22 @@ public class UserOutput
         System.out.println("Now dispensing: " + numberDollars + " dollars, " +
                 numberQuarters + " quarters, " +
                 numberDimes + " dimes, and " +
-                numberNickels + " nickel."
-        );
+                numberNickels + " nickel.");
 
         auditor.write(LocalDateTime.now() + "-- CHANGE GIVEN: $" + currentMoney + " , " +
                  "REMAINING BALANCE: $" + (currentMoney.subtract(currentMoney)));
     }
 
+    public static void getTotalSalesReport(Audit audit, List<SellableItem> itemList){
+        BigDecimal total=new BigDecimal("0.00");
+
+        audit.write("Taste Elevator Sales Report");
+        for(SellableItem item:itemList) {
+            audit.write(item.getName() + "|" + item.getAmountSoldFull()+"|"+item.getGetAmountSoldBOGODO());
+            BigDecimal fullPurchase=(item.getPrice().multiply(item.getAmountSoldFull()));
+            BigDecimal discountPurchase=(((item.getPrice().subtract(new BigDecimal("1"))).multiply(item.getGetAmountSoldBOGODO())));
+            total=total.add(fullPurchase.add(discountPurchase));
+        }
+        audit.write("TOTAL SALES: "+"$"+total);
+    }
 }

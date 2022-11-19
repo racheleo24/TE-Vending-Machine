@@ -10,6 +10,8 @@ public abstract class SellableItem {
     private String message;
     private  String slotIdentifier;
     private  int quantity;
+    private BigDecimal amountSoldFull=new BigDecimal("0");
+    private BigDecimal getAmountSoldBOGODO=new BigDecimal("0");
 
     // Constructor
     public SellableItem(String name, BigDecimal price, String message, String slotIdentifier) {
@@ -45,25 +47,24 @@ public abstract class SellableItem {
     public void setSlotIdentifier(String slotIdentifier) {
         this.slotIdentifier = slotIdentifier;
     }
-
     public  int getQuantity() {
         return quantity;
     }
-
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }
-
-    // Methods
-
-    @Override
-    public String toString() {
-        return "SellableItem{" +
-                "name='" + name + '\'' +
-                ", price=" + price +
-                ", message='" + message + '\'' +
-                ", slotIdentifier='" + slotIdentifier + '\'' +
-                ", quantity=" + quantity +
-                '}';
+    public BigDecimal getAmountSoldFull() {
+        return amountSoldFull;
     }
+    public void setAmountSoldFull(BigDecimal amountSoldFull) {
+        this.amountSoldFull = amountSoldFull;
+    }
+    public BigDecimal getGetAmountSoldBOGODO() {
+        return getAmountSoldBOGODO;
+    }
+    public void setGetAmountSoldBOGODO(BigDecimal getAmountSoldBOGODO) {
+        this.getAmountSoldBOGODO = getAmountSoldBOGODO;
+    }
+
+
 }
