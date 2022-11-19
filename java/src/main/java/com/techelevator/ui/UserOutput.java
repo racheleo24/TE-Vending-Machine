@@ -67,7 +67,7 @@ public class UserOutput {
             if (divisibleByFiveInt < 5 && divisibleByFiveInt >= 2) {
                 numberDimes++;
                 divisibleByFiveInt -= 2;
-            } else {
+            } else if (divisibleByFiveInt == 1){
                 numberNickels++;
                 divisibleByFiveInt--;
             }
