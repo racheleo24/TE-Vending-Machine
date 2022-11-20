@@ -130,7 +130,7 @@ public class UserInput
                         }
                         tally++;
                     }
-                    else if (item.getQuantity() <= 0) {
+                    else if (item.getQuantity() <= 0&&item.getSlotIdentifier().equalsIgnoreCase(id)) {
                         System.out.println("\nProduct no longer available");
                         tally++;
                     }
